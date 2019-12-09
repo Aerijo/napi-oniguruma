@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+  - 10
+
+jobs:
+  include:
+    - os: linux
+      dist: bionic
+    - os: osx
+    - os: windows
+
+deploy:
+  skip_cleanup: true
+  on:
+    tags: true
+  provider: script
+  script: npm install -g prebuild@9.1.1 && npm run pre-build && npm run pre-build:upload -u ${PREBUILD_UPLOAD}

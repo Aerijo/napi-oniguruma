@@ -1,0 +1,21 @@
+{
+  "name": "aerijo-oniguruma",
+  "version": "0.0.0",
+  "description": "NodeJS bindings for oniguruma regex",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "node spec/test.js"
+  },
+  "keywords": [
+    "regex",
+    "oniguruma"
+  ],
+  "author": "Benjamin Gray",
+  "license": "MIT",
+  "devDependencies": {
+    "prebuild": "9.1.1"
+  },
+  "dependencies": {
+    "prebuild-install": "5.3.3"
+  }
+}
