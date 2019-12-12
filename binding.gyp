@@ -18,7 +18,8 @@
                 ],
             },
             "include_dirs": [
-                "third_party/oniguruma/src"
+                "third_party/oniguruma",
+                "third_party/oniguruma/src",
             ],
             "conditions": [
                 ["OS==\"win\"", {
