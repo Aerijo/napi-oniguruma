@@ -3,9 +3,14 @@ const util = require("util");
 
 console.log(oniguruma);
 
+const o = new oniguruma.OnigScanner(["a", "b", "c"]);
+
+console.log(o);
+
+o.bar();
 
 for (let i = 0; i < 1000000; i++) {
-  const o = new oniguruma.OnigScanner(i);
+
 }
 
 // console.log(o);

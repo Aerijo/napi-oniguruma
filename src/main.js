@@ -1,4 +1,4 @@
-const oniguruma = require("../build/Release/oniguruma.node");
+const oniguruma = require("../build/Release/oniguruma_scanner.node");
 
 module.exports = oniguruma;
 //

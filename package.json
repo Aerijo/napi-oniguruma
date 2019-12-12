@@ -4,6 +4,7 @@
   "description": "NodeJS bindings for oniguruma regex",
   "main": "src/main.js",
   "scripts": {
+    "install": "node script/build.js && node-gyp rebuild",
     "test": "node spec/test.js"
   },
   "keywords": [
