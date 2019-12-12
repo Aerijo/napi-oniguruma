@@ -17,18 +17,27 @@
                     "third_party/oniguruma/src"
                 ],
             },
-            "cflags": [
-                "-w"
-            ],
             "include_dirs": [
                 "third_party/oniguruma/src"
             ],
+            "conditions": [
+                ["OS==\"win\"", {
+                    "defines": [
+                        "ONIG_EXTERN=extern",
+                    ],
+                }],
+                ["OS==\"linux\"", {
+                    "cflags": [
+                        "-w",
+                    ],
+                }],
+            ],
             "sources": [
-                "third_party/oniguruma/src/oniguruma.h",
-                "third_party/oniguruma/src/onig-config.in",
-                "third_party/oniguruma/src/regenc.h",
-                "third_party/oniguruma/src/regint.h",
-                "third_party/oniguruma/src/regparse.h",
+                # "third_party/oniguruma/src/oniguruma.h",
+                # "third_party/oniguruma/src/onig-config.in",
+                # "third_party/oniguruma/src/regenc.h",
+                # "third_party/oniguruma/src/regint.h",
+                # "third_party/oniguruma/src/regparse.h",
                 "third_party/oniguruma/src/regcomp.c",
                 "third_party/oniguruma/src/regenc.c",
                 "third_party/oniguruma/src/regerror.c",
@@ -38,11 +47,11 @@
                 "third_party/oniguruma/src/regsyntax.c",
                 "third_party/oniguruma/src/regtrav.c",
                 "third_party/oniguruma/src/regversion.c",
-                "third_party/oniguruma/src/st.h",
+                # "third_party/oniguruma/src/st.h",
                 "third_party/oniguruma/src/st.c",
-                "third_party/oniguruma/src/oniggnu.h",
+                # "third_party/oniguruma/src/oniggnu.h",
                 "third_party/oniguruma/src/reggnu.c",
-                "third_party/oniguruma/src/onigposix.h",
+                # "third_party/oniguruma/src/onigposix.h",
                 "third_party/oniguruma/src/regposerr.c",
                 "third_party/oniguruma/src/regposix.c",
                 "third_party/oniguruma/src/mktable.c",
