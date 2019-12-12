@@ -24,7 +24,7 @@
             "conditions": [
                 ["OS==\"win\"", {
                     "defines": [
-                        "ONIG_EXTERN=extern",
+                        "ONIG_EXTERN=extern", # TODO: Check if required
                     ],
                     "direct_dependent_settings": {
                         "defines": [
@@ -42,6 +42,11 @@
                     ]
                 }],
                 ["OS==\"linux\"", {
+                    "cflags": [
+                        "-w",
+                    ],
+                }],
+                ["OS==\"mac\"", {
                     "cflags": [
                         "-w",
                     ],
