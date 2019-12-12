@@ -10,6 +10,10 @@ jobs:
     - os: osx
     - os: windows
 
+env:
+  global:
+    - npm_config_jobs=max
+
 deploy:
   skip_cleanup: true
   on:
