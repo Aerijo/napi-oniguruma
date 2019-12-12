@@ -3,18 +3,18 @@
         {
             "target_name": "oniguruma_scanner",
             "dependencies": [
-                "oniguruma"
+                "oniguruma",
             ],
             "sources": [
-                "src/oniguruma.c"
-            ]
+                "src/oniguruma.c",
+            ],
         },
         {
             "target_name": "oniguruma",
             "type": "static_library",
             "direct_dependent_settings": {
                 "include_dirs": [
-                    "third_party/oniguruma/src"
+                    "third_party/oniguruma/src",
                 ],
             },
             "include_dirs": [
@@ -26,6 +26,20 @@
                     "defines": [
                         "ONIG_EXTERN=extern",
                     ],
+                    "direct_dependent_settings": {
+                        "defines": [
+                            "ONIG_EXTERN=extern",
+                        ],
+                    },
+                    "include_dirs": [
+                        "third_party/oniguruma",
+                    ],
+                    "sources": [
+                        "third_party/oniguruma/src/unicode_fold1_key.c",
+                        "third_party/oniguruma/src/unicode_fold2_key.c",
+                        "third_party/oniguruma/src/unicode_fold3_key.c",
+                        "third_party/oniguruma/src/unicode_unfold_key.c",
+                    ]
                 }],
                 ["OS==\"linux\"", {
                     "cflags": [
@@ -34,11 +48,6 @@
                 }],
             ],
             "sources": [
-                # "third_party/oniguruma/src/oniguruma.h",
-                # "third_party/oniguruma/src/onig-config.in",
-                # "third_party/oniguruma/src/regenc.h",
-                # "third_party/oniguruma/src/regint.h",
-                # "third_party/oniguruma/src/regparse.h",
                 "third_party/oniguruma/src/regcomp.c",
                 "third_party/oniguruma/src/regenc.c",
                 "third_party/oniguruma/src/regerror.c",
@@ -48,11 +57,8 @@
                 "third_party/oniguruma/src/regsyntax.c",
                 "third_party/oniguruma/src/regtrav.c",
                 "third_party/oniguruma/src/regversion.c",
-                # "third_party/oniguruma/src/st.h",
                 "third_party/oniguruma/src/st.c",
-                # "third_party/oniguruma/src/oniggnu.h",
                 "third_party/oniguruma/src/reggnu.c",
-                # "third_party/oniguruma/src/onigposix.h",
                 "third_party/oniguruma/src/regposerr.c",
                 "third_party/oniguruma/src/regposix.c",
                 "third_party/oniguruma/src/mktable.c",
@@ -87,8 +93,7 @@
                 "third_party/oniguruma/src/utf32_be.c",
                 "third_party/oniguruma/src/utf32_le.c",
                 "third_party/oniguruma/src/unicode.c",
-                # "third_party/oniguruma/src/unicode_fold_data.c",
-            ]
+            ],
         }
     ]
 }
