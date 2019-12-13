@@ -23,9 +23,6 @@
             ],
             "conditions": [
                 ["OS==\"win\"", {
-                    "defines": [
-                        "ONIG_EXTERN=extern", # TODO: Check if required
-                    ],
                     "direct_dependent_settings": {
                         "defines": [
                             "ONIG_EXTERN=extern",
