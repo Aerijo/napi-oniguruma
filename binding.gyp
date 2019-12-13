@@ -40,17 +40,16 @@
                         "third_party/oniguruma/src/unicode_fold3_key.c",
                         "third_party/oniguruma/src/unicode_unfold_key.c",
                     ]
-                }],
-                ["OS==\"linux\"", {
-                    "cflags": [
-                        "-w",
-                    ],
-                }],
-                ["OS==\"mac\"", {
+                }, { # OS != "win"
                     "cflags": [
                         "-Werror", # TODO: Make work
                     ],
                 }],
+                # ["OS==\"linux\"", {
+                #     "cflags": [
+                #         "-w",
+                #     ],
+                # }],
             ],
             "sources": [
                 "third_party/oniguruma/src/regcomp.c",
