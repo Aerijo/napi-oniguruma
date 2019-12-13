@@ -48,7 +48,7 @@
                 }],
                 ["OS==\"mac\"", {
                     "cflags": [
-                        "-w",
+                        "-Werror", # TODO: Make work
                     ],
                 }],
             ],
