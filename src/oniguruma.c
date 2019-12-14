@@ -107,15 +107,14 @@ NAPI_MODULE_INIT(/* napi_env env, napi_value exports */) {
 
 
   napi_value js_onig_string;
-  const napi_property_descriptor js_onig_string_properties[] = {};
   NAPI_CALL(env, napi_define_class(
     env,
     "OnigString",
     NAPI_AUTO_LENGTH,
     js_onig_string_constructor,
     NULL,
-    ARRAY_LENGTH(js_onig_string_properties),
-    js_onig_string_properties,
+    0,
+    NULL,
     &js_onig_string
   ));
   NAPI_CALL(env, napi_set_named_property(env, exports, "OnigString", js_onig_string));
