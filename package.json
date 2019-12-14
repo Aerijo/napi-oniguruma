@@ -1,23 +1,23 @@
 {
-  "name": "aerijo-oniguruma",
+  "name": "napi-oniguruma",
+  "author": "Benjamin Gray",
   "version": "0.0.0",
-  "description": "NodeJS bindings for oniguruma regex",
+  "description": "NAPI bindings for the Oniguruma regex library",
+  "license": "MIT",
   "main": "src/main.js",
-  "scripts": {
-    "install": "node script/build.js && node-gyp rebuild",
-    "test": "mocha"
-  },
   "keywords": [
     "regex",
     "oniguruma"
   ],
-  "author": "Benjamin Gray",
-  "license": "MIT",
-  "devDependencies": {
-    "mocha": "6.2.2",
-    "prebuild": "9.1.1"
+  "scripts": {
+    "install": "node script/build.js && node-gyp rebuild",
+    "test": "mocha"
   },
   "dependencies": {
     "prebuild-install": "5.3.3"
+  },
+  "devDependencies": {
+    "mocha": "6.2.2",
+    "prebuild": "9.1.1"
   }
 }
