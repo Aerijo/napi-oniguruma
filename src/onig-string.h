@@ -2,9 +2,8 @@
 #define ONIG_STRING_H
 
 #include <oniguruma.h>
-#include <stdatomic.h>
 
-static atomic_int id_counter = 0;
+static int id_counter = 0;
 
 typedef struct OnigString {
   int id;
