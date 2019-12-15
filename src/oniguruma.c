@@ -5,10 +5,10 @@
 #include <oniguruma.h>
 
 #include "./common.h"
+#include "./onig-reg-exp.h"
 #include "./onig-scanner.h"
 #include "./onig-scanner-worker.h"
 #include "./onig-string.h"
-#include "./onig-reg-exp.h"
 
 #define GET_CALL_CONTEXT(env, info, num_args) \
   napi_value argv[num_args]; \
@@ -22,7 +22,6 @@ void js_finalize_onig_scanner(napi_env env, void* finalize_data, void* finalize_
 
 napi_value js_onig_scanner_constructor(napi_env env, napi_callback_info info) {
   GET_CALL_CONTEXT(env, info, 1);
-
   napi_value patterns_array = argv[0];
   uint32_t num_patterns;
   NAPI_CALL(env, napi_get_array_length(env, patterns_array, &num_patterns));
@@ -36,8 +35,7 @@ napi_value js_onig_scanner_constructor(napi_env env, napi_callback_info info) {
     NAPI_CALL(env, napi_get_value_string_utf8(env, js_pattern, NULL, 0, &pattern_length));
     char* pattern_buffer = malloc(sizeof(char) * pattern_length);
     NAPI_CALL(env, napi_get_value_string_utf8(env, js_pattern, pattern_buffer, pattern_length, &pattern_length));
-
-    reg_exps[i] = onig_reg_exp_init(pattern_buffer, pattern_length);
+    reg_exps[i] = onig_reg_exp_init(pattern_buffer, pattern_length, env);
   }
 
   OnigScanner* scanner = onig_scanner_init(reg_exps, num_patterns);
@@ -83,7 +81,10 @@ napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info i
   NAPI_CALL(env, napi_unwrap(env, _this, &data));
   OnigScanner* scanner = data;
 
-  napi_value js_string = argv[0];
+  napi_value js_string = argv[0]; // TODO: Declare reference to this
+  napi_ref js_string_ref;
+  NAPI_CALL(env, napi_create_reference(env, js_string, 1, &js_string_ref));
+
   size_t start_position = 0;
   napi_value cb;
 
@@ -115,7 +116,7 @@ napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info i
   NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, contents, length, &length));
   OnigString* onig_string = onig_string_init((char*) contents, length);
 
-  submit_async_search(env, onig_string, start_position, scanner->reg_exps, scanner->num_reg_exps, cb_ref, this_ref);
+  submit_async_search(env, onig_string, start_position, scanner->reg_exps, scanner->num_reg_exps, js_string_ref, cb_ref, this_ref);
   return NULL;
 }
 

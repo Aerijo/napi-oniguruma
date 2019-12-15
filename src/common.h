@@ -19,7 +19,7 @@
     }                            \
   } while(0)
 
-#define NAPI_CALL_NO_RET(env, call)     \
+#define NAPI_CALL_RETURN_VOID(env, call)     \
   do {                           \
     napi_status status = (call); \
     if (status != napi_ok) {     \

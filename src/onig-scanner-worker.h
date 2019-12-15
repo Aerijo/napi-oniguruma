@@ -48,24 +48,22 @@ void complete_callback(napi_env env, napi_status status, void* _data) {
   OnigScannerData* data = _data;
 
   napi_value _this;
-  NAPI_CALL_NO_RET(env, napi_get_reference_value(env, data->_this, &_this));
+  NAPI_CALL_RETURN_VOID(env, napi_get_reference_value(env, data->_this, &_this));
   napi_value callback;
-  NAPI_CALL_NO_RET(env, napi_get_reference_value(env, data->_callback, &callback));
+  NAPI_CALL_RETURN_VOID(env, napi_get_reference_value(env, data->_callback, &callback));
 
   if (data->best_result != NULL) {
 
   } else {
     napi_value null_result;
-    NAPI_CALL_NO_RET(env, napi_get_null(env, &null_result));
-
+    NAPI_CALL_RETURN_VOID(env, napi_get_null(env, &null_result));
     napi_value argv[2] = {null_result, null_result};
-
-    NAPI_CALL_NO_RET(env, napi_call_function(env, _this, callback, 2, argv, NULL));
+    NAPI_CALL_RETURN_VOID(env, napi_call_function(env, _this, callback, 2, argv, NULL));
   }
 
-  NAPI_CALL_NO_RET(env, napi_delete_reference(env, data->_this));
-  NAPI_CALL_NO_RET(env, napi_delete_reference(env, data->_callback));
-  NAPI_CALL_NO_RET(env, napi_delete_async_work(env, data->_request));
+  NAPI_CALL_RETURN_VOID(env, napi_delete_reference(env, data->_this));
+  NAPI_CALL_RETURN_VOID(env, napi_delete_reference(env, data->_callback));
+  NAPI_CALL_RETURN_VOID(env, napi_delete_async_work(env, data->_request));
   onig_scanner_data_destroy(data);
 }
 
@@ -74,7 +72,6 @@ napi_value submit_async_search(napi_env env, OnigString* source, size_t offset, 
   NAPI_CALL(env, napi_create_string_utf8(env, "OnigScannerWorker", NAPI_AUTO_LENGTH, &resource_name));
 
   OnigScannerData* data = onig_scanner_data_construct(source, offset, reg_exps, num_reg_exps, cb, _this);
-
   NAPI_CALL(env, napi_create_async_work(
     env,
     NULL,

@@ -10,7 +10,6 @@ describe("OnigScanner", function () {
     const o = new OnigScanner(["foo"]);
     o.findNextMatchCb("foobar", function () {
 
-      throw new Error("Hmm")
     });
   });
 });

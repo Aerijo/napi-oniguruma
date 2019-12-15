@@ -3,10 +3,12 @@
 
 #include <oniguruma.h>
 
-static int id_counter = 0;
+#define ONIG_STRING_NULL_ID 0
+
+static size_t id_counter = 1; // 0 is NULL value; no string should have ID of 0
 
 typedef struct OnigString {
-  int id;
+  size_t id;
   OnigEncoding encoding;
 
   char* contents;
@@ -17,12 +19,10 @@ typedef struct OnigString {
 
 OnigString* onig_string_init(char* contents, size_t length) {
   OnigString* self = malloc(sizeof(OnigString));
-
   self->id = ++id_counter;
   self->encoding = ONIG_ENCODING_UTF16_LE;
   self->contents = contents;
   self->length = length;
-
   return self;
 }
 
