@@ -1,1 +1,3 @@
-* linguist-language=Python
+*.h linguist-language=C
+*.c linguist-language=C
+third_party/* linguist-vendored=true
