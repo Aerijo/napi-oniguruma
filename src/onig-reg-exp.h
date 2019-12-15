@@ -12,11 +12,12 @@ typedef struct OnigRegExp {
 } OnigRegExp;
 
 OnigRegExp* onig_reg_exp_init(const char* pattern, size_t length) {
-  return NULL;
+  OnigRegExp* self = malloc(sizeof(OnigRegExp));
+  return self;
 }
 
 void onig_reg_exp_destroy(OnigRegExp* self) {
-
+  free(self);
 }
 
 #endif

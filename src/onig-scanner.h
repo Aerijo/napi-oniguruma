@@ -4,18 +4,24 @@
 #include "./onig-reg-exp.h"
 
 typedef struct OnigScanner {
-  size_t num_expressions;
+  OnigRegExp** reg_exps;
+  size_t num_reg_exps;
 } OnigScanner;
 
-OnigScanner* onig_scanner_init(OnigRegExp* reg_exp[], size_t num_expressions) {
+OnigScanner* onig_scanner_init(OnigRegExp** reg_exps, size_t num_expressions) {
   OnigScanner* self = malloc(sizeof(OnigScanner));
 
-  self->num_expressions = num_expressions;
+  self->reg_exps = reg_exps;
+  self->num_reg_exps = num_expressions;
 
   return self;
 }
 
 void onig_scanner_destroy(OnigScanner* self) {
+  for (size_t i = 0; i < self->num_reg_exps; i++) {
+    onig_reg_exp_destroy(self->reg_exps[i]);
+  }
+  free(self->reg_exps);
   free(self);
 }
 

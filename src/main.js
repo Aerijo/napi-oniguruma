@@ -1,4 +1,4 @@
-const oniguruma = require("../build/Release/oniguruma_scanner.node");
+const oniguruma = require("../build/Debug/oniguruma_scanner.node");
 
 const OnigScanner = oniguruma.OnigScanner;
 const OnigString = oniguruma.OnigString;

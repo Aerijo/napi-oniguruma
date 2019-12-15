@@ -19,6 +19,15 @@
     }                            \
   } while(0)
 
+#define NAPI_CALL_NO_RET(env, call)     \
+  do {                           \
+    napi_status status = (call); \
+    if (status != napi_ok) {     \
+      raise_napi_error(env); \
+      return; \
+    }                            \
+  } while(0)
+
 napi_value raise_napi_error(napi_env env) {
   const napi_extended_error_info* error_info = NULL;
   napi_get_last_error_info((env), &error_info);
@@ -32,5 +41,7 @@ napi_value raise_napi_error(napi_env env) {
   }
   return NULL;
 }
+
+#define DECLARE_NAPI_METHOD(name, callback) {name, NULL, callback, NULL, NULL, NULL, napi_default, NULL}
 
 #endif
