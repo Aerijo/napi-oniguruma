@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "description": "NAPI bindings for the Oniguruma regex library",
   "license": "MIT",
-  "main": "src/main.js",
+  "main": "lib/main.js",
   "keywords": [
     "regex",
     "oniguruma"
