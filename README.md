@@ -3,12 +3,6 @@
 NAPI bindings for the Oniguruma regex library
 
 
-// TODO: Handle scenario:
-  1. OnigScanner calls async find next match
-  2. Scanner goes out of scope and is garbage collected
-  3. Native code attached to scanner is freed (regexes)
-  4. Async work is done on invalid regex pointers
+## Thread safety
 
-Solutions:
-  1. Have atomic counter for regex uses. Last to finish (scanner destruction vs async worker(s)) cleans up
-  2. Guarantee scanner remains live, by maintaing reference to it in JS land
+The entry and exit points of all async methods run on the main thread, so are inherently safe. The biggest concern is the work that gets done in the threadpool. In particular, the regex cannot cache results without protection. To fix this, we only update the cache during sync searches (where everything runs on the main thread). The goal will be to eventually add atomic operations to update values, even during async work (but Windows VS doesn't seem to support atomics). Maybe even make the cache a separate object, so a regex can have multiple caches, etc.

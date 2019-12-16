@@ -31,11 +31,10 @@ napi_value js_onig_scanner_constructor(napi_env env, napi_callback_info info) {
   for (size_t i = 0; i < num_patterns; i++) {
     napi_value js_pattern;
     NAPI_CALL(env, napi_get_element(env, patterns_array, i, &js_pattern));
-    size_t pattern_length;
-    NAPI_CALL(env, napi_get_value_string_utf8(env, js_pattern, NULL, 0, &pattern_length));
-    char* pattern_buffer = malloc(sizeof(char) * pattern_length);
-    NAPI_CALL(env, napi_get_value_string_utf8(env, js_pattern, pattern_buffer, pattern_length, &pattern_length));
-    reg_exps[i] = onig_reg_exp_init(pattern_buffer, pattern_length, env);
+    char* pattern_buffer;
+    size_t pattern_bytes;
+    get_js_utf16_string(env, js_pattern, &pattern_buffer, &pattern_bytes);
+    reg_exps[i] = onig_reg_exp_init(pattern_buffer, pattern_bytes, env);
   }
 
   OnigScanner* scanner = onig_scanner_init(reg_exps, num_patterns);
@@ -54,11 +53,11 @@ napi_value js_onig_string_constructor(napi_env env, napi_callback_info info) {
   napi_value js_string = argv[0];
   NAPI_CALL(env, napi_set_named_property(env, _this, "content", js_string));
 
-  size_t length;
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, NULL, 0, &length));
-  char16_t* contents = malloc(sizeof(char16_t) * length);
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, contents, length, &length));
-  OnigString* onig_string = onig_string_init((char*) contents, length);
+  char* string_buffer;
+  size_t string_bytes;
+  get_js_utf16_string(env, js_string, &string_buffer, &string_bytes);
+
+  OnigString* onig_string = onig_string_init(string_buffer, string_bytes);
   NAPI_CALL(env, napi_wrap(env, _this, onig_string, js_finalize_onig_string, NULL, NULL));
 
   return _this;
@@ -80,10 +79,6 @@ napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info i
   void* data;
   NAPI_CALL(env, napi_unwrap(env, _this, &data));
   OnigScanner* scanner = data;
-
-  napi_value js_string = argv[0]; // TODO: Declare reference to this
-  napi_ref js_string_ref;
-  NAPI_CALL(env, napi_create_reference(env, js_string, 1, &js_string_ref));
 
   size_t start_position = 0;
   napi_value cb;
@@ -111,12 +106,11 @@ napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info i
   NAPI_CALL(env, napi_create_reference(env, cb, 1, &cb_ref));
 
   size_t length;
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, NULL, 0, &length));
-  char16_t* contents = malloc(sizeof(char16_t) * length);
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, contents, length, &length));
+  char16_t* contents;
+  get_js_utf16_string(env, argv[0], &contents, &length);
   OnigString* onig_string = onig_string_init((char*) contents, length);
 
-  submit_async_search(env, onig_string, start_position, scanner->reg_exps, scanner->num_reg_exps, js_string_ref, cb_ref, this_ref);
+  submit_async_search(env, onig_string, start_position, scanner->reg_exps, scanner->num_reg_exps, cb_ref, this_ref);
   return NULL;
 }
 

@@ -1,6 +1,8 @@
 #ifndef ONIG_SCANNER_H
 #define ONIG_SCANNER_H
 
+#include <stdlib.h>
+
 #include "./onig-reg-exp.h"
 
 typedef struct OnigScanner {
@@ -8,12 +10,10 @@ typedef struct OnigScanner {
   size_t num_reg_exps;
 } OnigScanner;
 
-OnigScanner* onig_scanner_init(OnigRegExp** reg_exps, size_t num_expressions) {
+OnigScanner* onig_scanner_init(OnigRegExp** reg_exps, size_t num_reg_exps) {
   OnigScanner* self = malloc(sizeof(OnigScanner));
-
   self->reg_exps = reg_exps;
-  self->num_reg_exps = num_expressions;
-
+  self->num_reg_exps = num_reg_exps;
   return self;
 }
 

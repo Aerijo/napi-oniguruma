@@ -8,7 +8,7 @@
 #include "./onig-searcher.h"
 #include "./onig-string.h"
 
-typedef struct OnigScannerData {
+typedef struct OnigScannerWorker {
   OnigString* source;
   size_t offset;
   OnigRegExp** reg_exps;
@@ -17,10 +17,10 @@ typedef struct OnigScannerData {
   napi_ref _this;
   napi_ref _callback;
   napi_async_work _request;
-} OnigScannerData;
+} OnigScannerWorker;
 
-OnigScannerData* onig_scanner_data_construct(OnigString* source, size_t offset, OnigRegExp** reg_exps, size_t num_reg_exps, napi_ref cb, napi_ref _this) {
-  OnigScannerData* self = malloc(sizeof(OnigScannerData));
+OnigScannerWorker* onig_scanner_worker_construct(OnigString* source, size_t offset, OnigRegExp** reg_exps, size_t num_reg_exps, napi_ref cb, napi_ref _this) {
+  OnigScannerWorker* self = malloc(sizeof(OnigScannerWorker));
   self->source = source;
   self->offset = offset;
   self->reg_exps = reg_exps;
@@ -32,20 +32,22 @@ OnigScannerData* onig_scanner_data_construct(OnigString* source, size_t offset, 
   return self;
 }
 
-void onig_scanner_data_destroy(OnigScannerData* self) {
+void onig_scanner_worker_destroy(OnigScannerWorker* self) {
   onig_string_destroy(self->source);
-  // regexes belong to scanner
-  free(self->best_result);
+  // reg_exps belong to scanner
+  if (self->best_result != NULL) { // this is async work, so we own the result
+    onig_result_destroy(self->best_result);
+  }
   free(self);
 }
 
 void execute_callback(napi_env env, void* _data) {
-  OnigScannerData* data = _data;
-  data->best_result = search(data->source, data->offset, data->reg_exps, data->num_reg_exps);
+  OnigScannerWorker* data = _data;
+  data->best_result = search(data->source, data->offset, data->reg_exps, data->num_reg_exps, /* cache */ false);
 }
 
 void complete_callback(napi_env env, napi_status status, void* _data) {
-  OnigScannerData* data = _data;
+  OnigScannerWorker* data = _data;
 
   napi_value _this;
   NAPI_CALL_RETURN_VOID(env, napi_get_reference_value(env, data->_this, &_this));
@@ -53,7 +55,42 @@ void complete_callback(napi_env env, napi_status status, void* _data) {
   NAPI_CALL_RETURN_VOID(env, napi_get_reference_value(env, data->_callback, &callback));
 
   if (data->best_result != NULL) {
+    OnigResult* best = data->best_result;
 
+    napi_value result;
+    NAPI_CALL_RETURN_VOID(env, napi_create_object(env, &result));
+
+    napi_value scanner_index;
+    NAPI_CALL_RETURN_VOID(env, napi_create_uint32(env, onig_result_get_scanner_index(best), &scanner_index));
+    NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, result, "index", scanner_index));
+
+    size_t result_count = onig_result_num_captures(best);
+
+    napi_value captures_array;
+    NAPI_CALL_RETURN_VOID(env, napi_create_array_with_length(env, result_count, &captures_array));
+    for (size_t i = 0; i < result_count; i++) {
+      size_t capture_start = onig_result_location_of(best, i);
+      size_t capture_end = onig_result_location_of(best, i) + onig_result_group_length(best, i);
+
+      napi_value capture;
+      NAPI_CALL_RETURN_VOID(env, napi_create_object(env, &capture));
+
+      napi_value t;
+      NAPI_CALL_RETURN_VOID(env, napi_create_uint32(env, capture_start, &t));
+      NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, capture, "start", t));
+      NAPI_CALL_RETURN_VOID(env, napi_create_uint32(env, capture_end, &t));
+      NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, capture, "end", t));
+      NAPI_CALL_RETURN_VOID(env, napi_create_uint32(env, capture_end - capture_start, &t));
+      NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, capture, "length", t));
+
+      NAPI_CALL_RETURN_VOID(env, napi_set_element(env, captures_array, i, capture));
+    }
+
+    NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, result, "captureIndices", captures_array));
+    napi_value null_result;
+    NAPI_CALL_RETURN_VOID(env, napi_get_null(env, &null_result));
+    napi_value argv[2] = {null_result, result};
+    NAPI_CALL_RETURN_VOID(env, napi_call_function(env, _this, callback, 2, argv, NULL));
   } else {
     napi_value null_result;
     NAPI_CALL_RETURN_VOID(env, napi_get_null(env, &null_result));
@@ -64,14 +101,14 @@ void complete_callback(napi_env env, napi_status status, void* _data) {
   NAPI_CALL_RETURN_VOID(env, napi_delete_reference(env, data->_this));
   NAPI_CALL_RETURN_VOID(env, napi_delete_reference(env, data->_callback));
   NAPI_CALL_RETURN_VOID(env, napi_delete_async_work(env, data->_request));
-  onig_scanner_data_destroy(data);
+  onig_scanner_worker_destroy(data);
 }
 
 napi_value submit_async_search(napi_env env, OnigString* source, size_t offset, OnigRegExp* reg_exps[], size_t num_reg_exps, napi_ref cb, napi_ref _this) {
   napi_value resource_name;
   NAPI_CALL(env, napi_create_string_utf8(env, "OnigScannerWorker", NAPI_AUTO_LENGTH, &resource_name));
 
-  OnigScannerData* data = onig_scanner_data_construct(source, offset, reg_exps, num_reg_exps, cb, _this);
+  OnigScannerWorker* data = onig_scanner_worker_construct(source, offset, reg_exps, num_reg_exps, cb, _this);
   NAPI_CALL(env, napi_create_async_work(
     env,
     NULL,

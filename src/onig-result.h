@@ -3,13 +3,13 @@
 
 typedef struct OnigResult {
   OnigRegion* region;
-  size_t index;
+  size_t scanner_index;
 } OnigResult;
 
 OnigResult* onig_result_init(OnigRegion* region) {
   OnigResult* self = malloc(sizeof(OnigResult));
   self->region = region;
-  self->index = 0;
+  self->scanner_index = 0;
   return self;
 }
 
@@ -27,7 +27,15 @@ size_t onig_result_location_of(OnigResult* self, size_t index) {
   }
 }
 
-int onig_result_num_groups(OnigResult* self) {
+size_t onig_result_get_scanner_index(OnigResult* self) {
+  return self->scanner_index;
+}
+
+void onig_result_set_scanner_index(OnigResult* self, size_t index) {
+  self->scanner_index = index;
+}
+
+int onig_result_num_captures(OnigResult* self) {
   return self->region->num_regs;
 }
 
