@@ -105,8 +105,8 @@ napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info i
   napi_ref cb_ref;
   NAPI_CALL(env, napi_create_reference(env, cb, 1, &cb_ref));
 
+  char* contents;
   size_t length;
-  char16_t* contents;
   get_js_utf16_string(env, argv[0], &contents, &length);
   OnigString* onig_string = onig_string_init((char*) contents, length);
 

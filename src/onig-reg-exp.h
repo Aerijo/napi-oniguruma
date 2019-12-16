@@ -39,8 +39,6 @@ OnigRegExp* onig_reg_exp_init(char* pattern, size_t bytes, napi_env env) {
   self->source = pattern;
   self->source_bytes = bytes;
 
-  printf("Constructing %c%c%c (%d bytes)\n", pattern[0], pattern[2], pattern[4], bytes);
-
   OnigErrorInfo error;
   int status = onig_new(
     &self->regex,
@@ -81,8 +79,6 @@ OnigResult* onig_reg_exp_search(OnigRegExp* self, char* source, size_t length, s
   if (self->regex == NULL) {
     return NULL;
   }
-
-  printf("Searching\n");
 
   OnigRegion* region = onig_region_new();
   int status = onig_search(
@@ -128,24 +124,5 @@ OnigResult* onig_reg_exp_search_onig_string(OnigRegExp* self, OnigString* source
   self->last_search_result = onig_reg_exp_search(self, source->contents, source->length, start);
   return self->last_search_result;
 }
-
-// OnigRegExpBundle* onig_reg_exp_bundle_init(OnigRegExp** reg_exps, size_t num_reg_exps) {
-//   OnigRegExpBundle* self = malloc(sizeof(OnigRegExpBundle));
-//   self->reg_exps = reg_exps;
-//   self->num_reg_exps = num_reg_exps;
-//   self->references = 1;
-//   return self;
-// }
-//
-// void onig_reg_exp_bundle_unreference(OnigRegExpBundle* self) {
-//   if (--self->references > 0) {
-//     return;
-//   }
-//   for (size_t i = 0; i < self->num_reg_exps; i++) {
-//     onig_reg_exp_destroy(self->reg_exps[i]);
-//   }
-//   free(self->reg_exps);
-//   free(self);
-// }
 
 #endif

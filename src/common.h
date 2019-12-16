@@ -54,18 +54,9 @@ napi_value raise_napi_error(napi_env env) {
 
 napi_value get_js_utf16_string(napi_env env, napi_value js_string, char** buffer, size_t* length) {
   NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, NULL, 0, length));
-  printf("Input is %d code units\n", *length);
-
   *length = (*length) * 2;
   *buffer = malloc(*length);
-
-  printf("Ready to receive %d bytes\n", *length);
-
   NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, (char16_t*) *buffer, *length, NULL));
-
-  u_char* b = *buffer;
-  printf("Received %u %u %u %u %u %u\n", b[0], b[1], b[2], b[3], b[4], b[5]);
-
   return NULL;
 }
 
