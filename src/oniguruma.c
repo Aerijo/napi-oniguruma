@@ -64,7 +64,8 @@ napi_value js_onig_string_constructor(napi_env env, napi_callback_info info) {
 }
 
 napi_value js_onig_scanner_find_next_match(napi_env env, napi_callback_info info) {
-  GET_CALL_CONTEXT(env, info, 0);
+  napi_value _this;
+  NAPI_CALL(env, napi_get_cb_info(env, info, NULL, NULL, &_this, NULL));
   void* data;
   NAPI_CALL(env, napi_unwrap(env, _this, &data));
   // OnigScanner* scanner = data;
