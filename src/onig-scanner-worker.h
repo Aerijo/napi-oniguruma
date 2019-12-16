@@ -83,7 +83,6 @@ void complete_callback(napi_env env, napi_status status, void* _data) {
       NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, capture, "end", t));
       NAPI_CALL_RETURN_VOID(env, napi_create_uint32(env, capture_end - capture_start, &t));
       NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, capture, "length", t));
-
       NAPI_CALL_RETURN_VOID(env, napi_set_element(env, captures_array, i, capture));
     }
 

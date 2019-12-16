@@ -75,13 +75,44 @@ napi_value js_onig_scanner_find_next_match(napi_env env, napi_callback_info info
   return result;
 }
 
+napi_value js_onig_scanner_find_next_match_sync(napi_env env, napi_callback_info info) {
+  GET_CALL_CONTEXT(env, info, 2);
+  void* data;
+  NAPI_CALL(env, napi_unwrap(env, _this, &data));
+  OnigScanner* scanner = data;
+
+  size_t start_byte = 0;
+  if (argc >= 2) {
+    int32_t js_start_index;
+    NAPI_CALL(env, napi_get_value_int32(env, argv[1], &js_start_index));
+    start_byte = js_start_index * 2;
+  }
+
+  napi_valuetype string_type;
+  NAPI_CALL(env, napi_typeof(env, argv[0], &string_type));
+
+  OnigString* onig_string;
+  if (string_type == napi_string) {
+    char* contents;
+    size_t bytes;
+    get_js_utf16_string(env, argv[0], &contents, &bytes);
+    onig_string = onig_string_init(contents, bytes);
+  } else {
+    void* t;
+    NAPI_CALL(env, napi_unwrap(env, argv[0], &t));
+    onig_string = t;
+  }
+
+  return onig_scanner_find_next_match_sync(scanner, onig_string, start_byte, env);
+}
+
 napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info info) {
   GET_CALL_CONTEXT(env, info, 3);
   void* data;
   NAPI_CALL(env, napi_unwrap(env, _this, &data));
   OnigScanner* scanner = data;
 
-  size_t start_position = 0;
+  size_t start_byte = 0;
   napi_value cb;
 
   if (argc <= 1 || argc >= 4) {
@@ -92,13 +123,13 @@ napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info i
     cb = argv[1];
   } else {
     // (string, startPosition, callback)
-    int32_t start;
-    NAPI_CALL(env, napi_get_value_int32(env, argv[1], &start));
-    if (start >= 0) {
+    int32_t js_start_index;
+    NAPI_CALL(env, napi_get_value_int32(env, argv[1], &js_start_index));
+    if (js_start_index >= 0) {
       // *2 as we come from JS, which is UTF16, so one character is 2 bytes,
       // and JS doesn't understand unicode so we don't either (i.e., start_position)
       // is internally a byte offset, and externally a JS string index
-      start_position = start * 2;
+      start_byte = js_start_index * 2;
     }
     cb = argv[2];
   }
@@ -110,11 +141,11 @@ napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info i
   NAPI_CALL(env, napi_create_reference(env, cb, 1, &cb_ref));
 
   char* contents;
-  size_t length;
-  get_js_utf16_string(env, argv[0], &contents, &length);
-  OnigString* onig_string = onig_string_init((char*) contents, length);
+  size_t bytes;
+  get_js_utf16_string(env, argv[0], &contents, &bytes);
+  OnigString* onig_string = onig_string_init(contents, bytes);
 
-  submit_async_search(env, onig_string, start_position, scanner->reg_exps, scanner->num_reg_exps, cb_ref, this_ref);
+  submit_async_search(env, onig_string, start_byte, scanner->reg_exps, scanner->num_reg_exps, cb_ref, this_ref);
   return NULL;
 }
 
@@ -128,7 +159,7 @@ NAPI_MODULE_INIT(/* napi_env env, napi_value exports */) {
   const napi_property_descriptor js_onig_scanner_properties[] = {
     DECLARE_NAPI_METHOD("findNextMatch", js_onig_scanner_find_next_match),
     DECLARE_NAPI_METHOD("findNextMatchCb", js_onig_scanner_find_next_match_cb),
-    DECLARE_NAPI_METHOD("findNextMatchSync", js_onig_scanner_find_next_match)
+    DECLARE_NAPI_METHOD("findNextMatchSync", js_onig_scanner_find_next_match_sync)
   };
   NAPI_CALL(env, napi_define_class(
     env,

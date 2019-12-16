@@ -2,6 +2,20 @@ const assert = require('assert');
 const {OnigScanner} = require("../");
 
 describe("OnigScanner", function() {
+  describe("::findNextMatchSync", function() {
+    it("works", function() {
+      const s = new OnigScanner(["b", "a"]);
+      assert.deepStrictEqual(s.findNextMatchSync("xxab"), {
+        index: 1,
+        captureIndices: [{
+          start: 2,
+          end: 3,
+          length: 1,
+        }],
+      });
+    });
+  });
+
   describe("::findNextMatchCb", function() {
     const inspectCall = ({promises, scanner}, text, start, cb) => {
       promises.push(new Promise(resolve => {

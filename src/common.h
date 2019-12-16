@@ -51,12 +51,12 @@ napi_value raise_napi_error(napi_env env) {
   char* buffer_name = malloc(length_name); \
   NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, (char16_t*) buffer_name, length_name, &length_name));
 
-
-napi_value get_js_utf16_string(napi_env env, napi_value js_string, char** buffer, size_t* length) {
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, NULL, 0, length));
-  *length = (*length) * 2;
-  *buffer = malloc(*length);
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, (char16_t*) *buffer, *length, NULL));
+napi_value get_js_utf16_string(napi_env env, napi_value js_string, char** buffer, size_t* bytes) {
+  size_t length;
+  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, NULL, 0, &length));
+  *bytes = length * 2;
+  *buffer = malloc(*bytes);
+  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, (char16_t*) *buffer, *bytes, NULL));
   return NULL;
 }
 
