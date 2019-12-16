@@ -2,13 +2,8 @@ const assert = require('assert');
 const {OnigScanner} = require("../");
 
 describe("OnigScanner", function() {
-  it("exists", () => {
-    assert.doesNotThrow(() => { new OnigScanner([]); });
-  });
-
   describe("::findNextMatchCb", function() {
-    const promises = [];
-    const inspectCall = (scanner, text, start, cb) => {
+    const inspectCall = ({promises, scanner}, text, start, cb) => {
       promises.push(new Promise(resolve => {
         scanner.findNextMatchCb(text, start, (err, captures) => {
           cb(err, captures);
@@ -17,15 +12,19 @@ describe("OnigScanner", function() {
       }));
     }
 
-    it("returns the index of the matching pattern", function() {
+    it("correctly matches ASCII expressions", function() {
       const s = new OnigScanner(["a", "b", "c"]);
+      const c = {
+        promises: [],
+        scanner: s,
+      };
 
-      inspectCall(s, "x", 0, (err, captures) => {
+      inspectCall(c, "x", 0, (err, captures) => {
         assert.strictEqual(err, null);
         assert.strictEqual(captures, null);
       });
 
-      inspectCall(s, "xxaxxbxxc", 0, (err, captures) => {
+      inspectCall(c, "xxaxxbxxc", 0, (err, captures) => {
         assert.strictEqual(err, null);
         assert.deepStrictEqual(captures, {
           scanner: s,
@@ -38,7 +37,7 @@ describe("OnigScanner", function() {
         });
       });
 
-      inspectCall(s, "xxaxxbxxc", 4, (err, captures) => {
+      inspectCall(c, "xxaxxbxxc", 4, (err, captures) => {
         assert.strictEqual(err, null);
         assert.deepStrictEqual(captures, {
           scanner: s,
@@ -51,7 +50,7 @@ describe("OnigScanner", function() {
         });
       });
 
-      inspectCall(s, "xxaxxbxxc", 7, (err, captures) => {
+      inspectCall(c, "xxaxxbxxc", 7, (err, captures) => {
         assert.strictEqual(err, null);
         assert.deepStrictEqual(captures, {
           scanner: s,
@@ -64,12 +63,61 @@ describe("OnigScanner", function() {
         });
       });
 
-      inspectCall(s, "xxaxxbxxc", 9, (err, captures) => {
+      inspectCall(c, "xxaxxbxxc", 9, (err, captures) => {
         assert.strictEqual(err, null);
         assert.strictEqual(captures, null);
       });
 
-      return Promise.all(promises);
+      return Promise.all(c.promises);
+    });
+
+    describe("when the string searched contains unicode", function() {
+      it("handles regular width unicode", function() {
+        const s = new OnigScanner(["1", "2"]);
+        const c = {
+          promises: [],
+          scanner: s,
+        };
+
+        inspectCall(c, "ab…cde21", 5, (err, captures) => {
+          assert.strictEqual(err, null);
+          assert.deepStrictEqual(captures, {
+            scanner: s,
+            index: 1,
+            captureIndices: [{
+              start: 6,
+              end: 7,
+              length: 1,
+            }],
+          });
+        });
+
+        return Promise.all(c.promises);
+      });
+
+      it("handles extra wide unicode", function() {
+        const s = new OnigScanner(["1", "2"]);
+        const c = {
+          promises: [],
+          scanner: s,
+        };
+
+        inspectCall(c, "ab🇦🇺cde21", 5, (err, captures) => { // Flag is made of two 2-byte code units
+          assert.strictEqual("🇦🇺".length, 4);
+          assert.strictEqual(err, null);
+          assert.deepStrictEqual(captures, {
+            scanner: s,
+            index: 1,
+            captureIndices: [{
+              start: 9,
+              end: 10,
+              length: 1,
+            }],
+          });
+        });
+
+        return Promise.all(c.promises);
+      });
     });
   });
 });
