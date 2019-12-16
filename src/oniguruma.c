@@ -95,7 +95,10 @@ napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info i
     int32_t start;
     NAPI_CALL(env, napi_get_value_int32(env, argv[1], &start));
     if (start >= 0) {
-      start_position = start;
+      // *2 as we come from JS, which is UTF16, so one character is 2 bytes,
+      // and JS doesn't understand unicode so we don't either (i.e., start_position)
+      // is internally a byte offset, and externally a JS string index
+      start_position = start * 2;
     }
     cb = argv[2];
   }

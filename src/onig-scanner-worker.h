@@ -63,14 +63,15 @@ void complete_callback(napi_env env, napi_status status, void* _data) {
     napi_value scanner_index;
     NAPI_CALL_RETURN_VOID(env, napi_create_uint32(env, onig_result_get_scanner_index(best), &scanner_index));
     NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, result, "index", scanner_index));
+    NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, result, "scanner", _this));
 
     size_t result_count = onig_result_num_captures(best);
 
     napi_value captures_array;
     NAPI_CALL_RETURN_VOID(env, napi_create_array_with_length(env, result_count, &captures_array));
     for (size_t i = 0; i < result_count; i++) {
-      size_t capture_start = onig_result_location_of(best, i);
-      size_t capture_end = onig_result_location_of(best, i) + onig_result_group_length(best, i);
+      size_t capture_start = onig_result_location_of(best, i) / 2; // HACK: divide by 2 to convert byteOffset (UTF16) -> JS string index
+      size_t capture_end = capture_start + onig_result_group_length(best, i) / 2;
 
       napi_value capture;
       NAPI_CALL_RETURN_VOID(env, napi_create_object(env, &capture));

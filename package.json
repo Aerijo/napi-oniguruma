@@ -10,8 +10,11 @@
     "oniguruma"
   ],
   "scripts": {
-    "install": "node script/build.js && node-gyp rebuild",
-    "test": "mocha"
+    "install": "npm run configure && npm run build",
+    "configure": "node script/configure.js",
+    "build": "node-gyp rebuild -j=max",
+    "test": "mocha",
+    "b:test": "npm run build && npm run test"
   },
   "dependencies": {
     "prebuild-install": "5.3.3"
