@@ -56,7 +56,8 @@ napi_value get_js_utf16_string(napi_env env, napi_value js_string, char** buffer
   NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, NULL, 0, &length));
   *bytes = length * 2;
   *buffer = malloc(*bytes);
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, (char16_t*) *buffer, *bytes, NULL));
+  // NOTE: Cannot pass NULL into length result; causes weird test failures on windows
+  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, (char16_t*) *buffer, *bytes, &length));
   return NULL;
 }
 

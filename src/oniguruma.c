@@ -103,7 +103,13 @@ napi_value js_onig_scanner_find_next_match_sync(napi_env env, napi_callback_info
     onig_string = t;
   }
 
-  return onig_scanner_find_next_match_sync(scanner, onig_string, start_byte, env);
+  napi_value result = onig_scanner_find_next_match_sync(scanner, onig_string, start_byte, env);
+
+  if (string_type == napi_string) {
+    onig_string_destroy(onig_string);
+  }
+
+  return result;
 }
 
 napi_value js_onig_scanner_find_next_match_cb(napi_env env, napi_callback_info info) {
