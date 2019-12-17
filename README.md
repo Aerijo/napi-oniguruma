@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/Aerijo/napi-oniguruma.svg?branch=master)](https://travis-ci.com/Aerijo/napi-oniguruma)
+
 # napi-oniguruma
 
 NAPI bindings for the Oniguruma regex library
