@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.com/Aerijo/napi-oniguruma.svg?branch=master)](https://travis-ci.com/Aerijo/napi-oniguruma)
+[![Dependency Status](https://david-dm.org/Aerijo/napi-oniguruma.svg)](https://david-dm.org/Aerijo/napi-oniguruma)
+[![DevDependency Status](https://david-dm.org/Aerijo/napi-oniguruma/dev-status.svg)](https://david-dm.org/Aerijo/napi-oniguruma/?type=dev)
 
 # napi-oniguruma
 
