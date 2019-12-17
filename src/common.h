@@ -57,7 +57,7 @@ napi_value get_js_utf16_string(napi_env env, napi_value js_string, char** buffer
   size_t null_t_bytes = (code_units + 1) * 2; // + 1 to account for null terminator
   *buffer = malloc(null_t_bytes);
   // NOTE: Cannot truncate results; causes weird test failures on windows
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, (char16_t*) *buffer, null_t_bytes, &length));
+  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, (char16_t*) *buffer, null_t_bytes, &code_units));
   *bytes = null_t_bytes - 2; // We don't care about the null terminator
   return NULL;
 }
