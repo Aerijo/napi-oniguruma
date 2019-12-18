@@ -156,6 +156,7 @@ void complete_async_search_callback(napi_env env, napi_status status, void* _dat
   NAPI_CALL_RETURN_VOID(env, napi_delete_reference(env, data->_this));
   NAPI_CALL_RETURN_VOID(env, napi_delete_async_work(env, data->_request));
   onig_search_data_destroy(search_data);
+  free(data);
 }
 
 napi_value create_async_search(napi_env env, OnigAsyncData* data) {
