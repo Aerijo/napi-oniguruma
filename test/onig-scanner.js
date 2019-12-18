@@ -15,15 +15,15 @@ describe("OnigScanner", function() {
     }));
 
     // TODO: Implement promise API
-    // promises.push(new Promise(async resolve => {
-    //   scanner.findNextMatch(text, start).then(captures => {
-    //     assert.deepStrictEqual(captures, expected_captures);
-    //   }).catch(err => {
-    //     assert.deepStrictEqual(err, expected_err);
-    //   }).finally(() => {
-    //     resolve();
-    //   });
-    // }));
+    promises.push(new Promise(async resolve => {
+      scanner.findNextMatch(text, start).then(captures => {
+        assert.deepStrictEqual(captures, expected_captures);
+      }).catch(err => {
+        assert.deepStrictEqual(err, expected_err);
+      }).finally(() => {
+        resolve();
+      });
+    }));
 
     assert.deepStrictEqual(scanner.findNextMatchSync(text, start), expected_captures);
   }

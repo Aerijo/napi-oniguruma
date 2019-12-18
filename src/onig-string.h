@@ -26,6 +26,23 @@ OnigString* onig_string_init(char* contents, size_t length) {
   return self;
 }
 
+void retrieve_onig_string(napi_env env, napi_value object, OnigString** output, bool* is_js_string) {
+  napi_valuetype string_type;
+  NAPI_CALL_RETURN_VOID(env, napi_typeof(env, object, &string_type));
+  *is_js_string = string_type == napi_string;
+
+  if (*is_js_string) {
+    char* contents;
+    size_t bytes;
+    get_js_utf16_string(env, object, &contents, &bytes);
+    *output = onig_string_init(contents, bytes);
+  } else {
+    void* t;
+    NAPI_CALL_RETURN_VOID(env, napi_unwrap(env, object, &t));
+    *output = t;
+  }
+}
+
 void onig_string_destroy(OnigString* self) {
   free(self->contents);
   free(self);

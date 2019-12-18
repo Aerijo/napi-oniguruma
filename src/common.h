@@ -28,6 +28,13 @@
     }                            \
   } while(0)
 
+#define NAPI_PROPAGATE_FAILURE(call) \
+  do { \
+    if ((call) != napi_ok) {     \
+      return call; \
+    } \
+  } while (0)
+
 napi_value raise_napi_error(napi_env env) {
   const napi_extended_error_info* error_info = NULL;
   napi_get_last_error_info((env), &error_info);
