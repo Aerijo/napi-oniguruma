@@ -51,13 +51,6 @@ napi_value raise_napi_error(napi_env env) {
 
 #define DECLARE_NAPI_METHOD(name, callback) {name, NULL, callback, NULL, NULL, NULL, napi_default, NULL}
 
-#define NAPI_GET_STRING_U16(env, js_string, buffer_name, length_name) \
-  size_t length_name; \
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, NULL, 0, &length_name)); \
-  length_name = (length_name + 1) * 2; \
-  char* buffer_name = malloc(length_name); \
-  NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, (char16_t*) buffer_name, length_name, &length_name));
-
 napi_value get_js_utf16_string(napi_env env, napi_value js_string, char** buffer, size_t* bytes) {
   size_t code_units;
   NAPI_CALL(env, napi_get_value_string_utf16(env, js_string, NULL, 0, &code_units));
