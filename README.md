@@ -4,7 +4,44 @@
 
 # napi-oniguruma
 
-NAPI bindings for the Oniguruma regex library
+N-API bindings for the Oniguruma regex library
+
+## Features
+
+This module uses the lastest Oniguruma regex release (6.9.4), and aims to keep it up to date. It uses N-API bindings, allowing the same binary to work across [all future NodeJS versions](https://nodejs.org/en/docs/guides/abi-stability/#n-api).
+
+To interface with the regular expressions, there is a choice of
+- Synchronous calls with `scanner.findNextMatchSync` (fastest, but blocks the main thread)
+- Callbacks with `scanner.findNextMatchCb` (regex match is run on separate thread)
+- Promises with `scanner.findNextMatch` (same as callbacks)
+
+
+## Performance
+
+When I run the `node-oniguruma` benchmarks on it's own library, I get the following results
+```
+oneline.js
+sync:  149652 matches in 1778ms
+large.js
+sync:  14594 matches in 162ms
+Segmentation fault (core dumped)
+```
+
+When I run the same benchmarks on this library, I get
+```
+oneline.js
+sync:  149652 matches in 2985ms
+large.js
+sync:  14594 matches in 186ms
+async: 14594 matches in 1055ms
+```
+
+They tend to have some variance, but the above figures are fairly typical. From the above results, you can expect a significant performance drop when run on a single line JSON, and a 1.15 times slowdown when searching for `'this', 'var', 'selector', 'window'` on the JQuery source.
+
+In general, a drop in performance is to be expected. N-API is an abstraction over the underlying JS VM, so cannot compete with `node-oniguruma` using the V8 API's. However, what we lose in performance we gain in stability, so you can depend on prebuilt binaries being valid without active maintenance. I am interested in seeing if NAN bindings can also be implemented in this project too though, and comparing their performance to those in `node-oniguruma`.
+
+In a point to this library though, we don't segfault on async operations. Improving the benchmarks to better reflect real usage is a goal for this module.
+
 
 
 ## Thread safety
@@ -22,6 +59,8 @@ The API supports starting from a given index within the string. This has been in
 
 
 ## TODO
-- [ ] Refactor C code to reduce duplication
+- [X] Refactor C code to reduce duplication
 - [ ] Set up proper benchmarks
-- [ ] Batch the property setting into a single napi call
+- [ ] Typescript types
+- [ ] ~~Batch the property setting into a single N-API call~~
+  - Not done, as could not detect any measurable improvement, and makes the properties invisible to the tests.
