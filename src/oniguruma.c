@@ -1,4 +1,3 @@
-#define NAPI_EXPERIMENTAL
 #include <node_api.h> // https://github.com/nodejs/node/blob/master/src/node_api.h
 #include <stdio.h>
 #include <stdlib.h>
