@@ -4,28 +4,6 @@
 #include "./common.h"
 #include "./onig-async.h"
 
-napi_value create_async_search(napi_env env, OnigAsyncData* data) {
-  assert(data->_request == NULL);
-  napi_value resource_name;
-  NAPI_CALL(env, napi_create_string_utf8(env, "OnigScannerWorker", NAPI_AUTO_LENGTH, &resource_name));
-  NAPI_CALL(env, napi_create_async_work(
-    env,
-    NULL,
-    resource_name,
-    execute_async_search_callback,
-    complete_async_search_callback,
-    (void*) data,
-    &data->_request
-  ));
-  return NULL;
-}
-
-napi_value queue_async_search(napi_env env, OnigAsyncData* data) {
-  assert(data->_request != NULL);
-  NAPI_CALL(env, napi_queue_async_work(env, data->_request));
-  return NULL;
-}
-
 void execute_async_search_callback(napi_env env, void* _data) {
   OnigAsyncData* data = _data;
   OnigSearchData* s = data->search_data;
@@ -88,6 +66,28 @@ void complete_async_search_callback(napi_env env, napi_status status, void* _dat
   NAPI_CALL_RETURN_VOID(env, napi_delete_async_work(env, data->_request));
   onig_search_data_destroy(search_data);
   free(data);
+}
+
+napi_value create_async_search(napi_env env, OnigAsyncData* data) {
+  assert(data->_request == NULL);
+  napi_value resource_name;
+  NAPI_CALL(env, napi_create_string_utf8(env, "OnigScannerWorker", NAPI_AUTO_LENGTH, &resource_name));
+  NAPI_CALL(env, napi_create_async_work(
+    env,
+    NULL,
+    resource_name,
+    execute_async_search_callback,
+    complete_async_search_callback,
+    (void*) data,
+    &data->_request
+  ));
+  return NULL;
+}
+
+napi_value queue_async_search(napi_env env, OnigAsyncData* data) {
+  assert(data->_request != NULL);
+  NAPI_CALL(env, napi_queue_async_work(env, data->_request));
+  return NULL;
 }
 
 napi_value onig_search_async_promise(napi_env env, napi_value _this, napi_deferred deferred, OnigSearchData* search_data) {

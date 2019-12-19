@@ -23,10 +23,6 @@ napi_value create_async_search(napi_env env, OnigAsyncData* data);
 
 napi_value queue_async_search(napi_env env, OnigAsyncData* data);
 
-void execute_async_search_callback(napi_env env, void* _data);
-
-void complete_async_search_callback(napi_env env, napi_status status, void* _data);
-
 napi_value onig_search_async_promise(napi_env env, napi_value _this, napi_deferred deferred, OnigSearchData* search_data);
 
 napi_value onig_search_async_callback(napi_env env, napi_value _this, napi_value cb, OnigSearchData* search_data);

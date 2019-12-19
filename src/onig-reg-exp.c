@@ -42,6 +42,7 @@ void onig_reg_exp_destroy(OnigRegExp* self) {
   free(self);
 }
 
+// TODO: Make work on UTF16
 bool has_G_anchor(const char* pattern, size_t length) {
   for (size_t i = 0; i < length; ++i) {
     if (pattern[i] == '\\' && ++i < length) {
