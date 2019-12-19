@@ -5,9 +5,10 @@
 #include <oniguruma.h>
 
 #include "./common.h"
+#include "./onig-async.h"
 #include "./onig-reg-exp.h"
 #include "./onig-scanner.h"
-#include "./onig-scanner-worker.h"
+#include "./onig-search.h"
 #include "./onig-string.h"
 
 #define GET_CALL_CONTEXT(env, info, num_args) \
@@ -114,11 +115,18 @@ napi_value js_onig_scanner_find_next_match_sync(napi_env env, napi_callback_info
   bool is_js_string;
   retrieve_onig_string(env, argv[0], &onig_string, &is_js_string);
 
-  napi_value result = onig_scanner_find_next_match_sync(scanner, onig_string, start_byte, env);
+  OnigSearchData* search_data = onig_search_data_init(
+    onig_string,
+    start_byte,
+    scanner->reg_exps,
+    scanner->num_reg_exps,
+    /* cache */ is_js_string,
+    /* free string */ is_js_string
+  );
 
-  if (is_js_string) {
-    onig_string_destroy(onig_string);
-  }
+  napi_value result = onig_scanner_find_next_match_sync(env, search_data);
+
+  onig_search_data_destroy(search_data);
 
   return result;
 }

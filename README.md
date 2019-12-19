@@ -15,3 +15,13 @@ The entry and exit points of all async methods run on the main thread, so are in
 ## Indexing
 
 The API supports starting from a given index within the string. This has been interpreted as JS string index, and not unicode code point or similar. Hopefully support for actual code point indexing can be added.
+
+
+## NOTE
+- There is a bug in Node 10.15.3--12.0.0 that causes a memory leak when using the async (promise and callback) methods.
+
+
+## TODO
+- [ ] Refactor C code to reduce duplication
+- [ ] Set up proper benchmarks
+- [ ] Batch the property setting into a single napi call

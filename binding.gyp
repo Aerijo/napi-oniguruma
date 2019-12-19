@@ -6,7 +6,14 @@
                 "oniguruma",
             ],
             "sources": [
+                "src/common.c",
                 "src/oniguruma.c",
+                "src/onig-async.c",
+                "src/onig-reg-exp.c",
+                "src/onig-result.c",
+                "src/onig-scanner.c",
+                "src/onig-search.c",
+                "src/onig-string.c",
             ],
         },
         {
