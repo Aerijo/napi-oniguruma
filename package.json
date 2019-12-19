@@ -3,6 +3,7 @@
   "author": "Benjamin Gray",
   "version": "0.0.0",
   "description": "NAPI bindings for the Oniguruma regex library",
+  "repository": "https://github.com/Aerijo/napi-oniguruma",
   "license": "MIT",
   "main": "lib/main.js",
   "keywords": [
