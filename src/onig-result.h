@@ -24,6 +24,6 @@ int onig_result_num_captures(OnigResult* self);
 
 size_t onig_result_group_length(OnigResult* self, size_t index);
 
-napi_value generate_captures(napi_env env, OnigResult best);
+napi_value generate_captures(napi_env env, OnigResult* best);
 
 #endif

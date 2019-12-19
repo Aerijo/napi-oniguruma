@@ -25,7 +25,7 @@ void complete_async_search_callback(napi_env env, napi_status status, void* _dat
   if (search_data->best_result != NULL) {
     OnigResult* best = search_data->best_result;
 
-    napi_value result = generate_captures(env, *best);
+    napi_value result = generate_captures(env, best);
 
     if (data->_return_kind == JS_PROMISE) {
       NAPI_CALL_RETURN_VOID(env, napi_resolve_deferred(env, data->_deferred, result));
