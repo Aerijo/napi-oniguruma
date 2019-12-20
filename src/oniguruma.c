@@ -125,7 +125,7 @@ napi_value js_onig_scanner_find_next_match_sync(napi_env env, napi_callback_info
     start_byte,
     scanner->reg_exps,
     scanner->num_reg_exps,
-    /* cache */ is_js_string,
+    /* cache */ !is_js_string,
     /* free string */ is_js_string
   );
 

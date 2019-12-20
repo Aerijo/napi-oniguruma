@@ -60,7 +60,7 @@ The API supports starting from a given index within the string. This has been in
 
 ## TODO
 - [X] Refactor C code to reduce duplication
-- [ ] Fix the G anchor detection
+- [X] Fix the G anchor detection
 - [ ] Comprehensive tests
 - [ ] Set up proper benchmarks
 - [ ] Typescript types
