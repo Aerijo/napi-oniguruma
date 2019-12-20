@@ -8,7 +8,9 @@
   "main": "lib/main.js",
   "keywords": [
     "regex",
-    "oniguruma"
+    "oniguruma",
+    "napi",
+    "native"
   ],
   "scripts": {
     "install": "npm run configure && npm run build",
@@ -22,7 +24,6 @@
   },
   "devDependencies": {
     "mocha": "6.2.2",
-    "prebuild": "9.1.1",
-    "yargs-parser": "^16.1.0"
+    "prebuild": "9.1.1"
   }
 }
