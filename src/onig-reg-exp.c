@@ -42,8 +42,10 @@ void onig_reg_exp_destroy(OnigRegExp* self) {
   free(self);
 }
 
-// TODO: Make work on UTF16
 bool has_G_anchor(const char* pattern, size_t length) {
+  // TODO: Maybe this fails when the lower half of a UTF16
+  // code point looks like `\`, and the lower of the next looks
+  // like `G` (is this possible)?
   for (size_t i = 0; i < length; i += 2) {
     if (pattern[i] == '\\') {
       i += 2;

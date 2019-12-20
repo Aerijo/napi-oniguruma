@@ -191,22 +191,19 @@ describe("OnigScanner", function() {
 
   describe("when a regular expression contains \\G (current search start anchor)", function() {
     it("does not get cached", async function() {
-      const str = new OnigString("axxax");
-      const scanner = new OnigScanner(["\\Gx"]);
-      assert.deepStrictEqual(scanner.findNextMatchSync(str, 0), null);
-      assert.deepStrictEqual(scanner.findNextMatchSync(str, 1), {
+      const str = new OnigString("abcfoofoofoofoo");
+      const scanner = new OnigScanner(["(?<=\\G......)foo"]);
+
+      // \G is start of string
+      assert.deepStrictEqual(scanner.findNextMatchSync(str, 0), {
         index: 0,
-        captureIndices: [{start: 1, end: 2, length: 1}],
+        captureIndices: [{start: 6, end: 9, length: 3}],
       });
-      assert.deepStrictEqual(scanner.findNextMatchSync(str, 2), {
-        index: 0,
-        captureIndices: [{start: 2, end: 3, length: 1}],
-      });
-      assert.deepStrictEqual(scanner.findNextMatchSync(str, 3), null);
-      assert.deepStrictEqual(scanner.findNextMatchSync(str, 4), {
-        index: 0,
-        captureIndices: [{start: 4, end: 5, length: 1}],
-      });
+
+      // \G is second character in string, with caching would have
+      // matched same as the previous test (as it found the match after
+      // our starting position here)
+      assert.deepStrictEqual(scanner.findNextMatchSync(str, 1), null);
     });
   });
 });
