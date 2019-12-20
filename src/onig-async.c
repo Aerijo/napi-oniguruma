@@ -31,7 +31,6 @@ void complete_async_search_callback(napi_env env, napi_status status, void* _dat
       NAPI_CALL_RETURN_VOID(env, napi_resolve_deferred(env, data->_deferred, result));
       data->_deferred = NULL;
     } else if (data->_return_kind == JS_CALLBACK) {
-      NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, result, "scanner", _this));
       napi_value null_result;
       NAPI_CALL_RETURN_VOID(env, napi_get_null(env, &null_result));
       napi_value argv[2] = {null_result, result};
