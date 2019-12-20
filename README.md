@@ -8,7 +8,7 @@ N-API bindings for the Oniguruma regex library
 
 ## Features
 
-This module uses the lastest Oniguruma regex release (6.9.4), and aims to keep it up to date. It uses N-API bindings, allowing the same binary to work across [all future NodeJS versions](https://nodejs.org/en/docs/guides/abi-stability/#n-api).
+This module uses the lastest Oniguruma regex release (6.9.4), and aims to keep it up to date. It uses N-API bindings, allowing the same binary to work across [all future NodeJS versions](https://nodejs.org/en/docs/guides/abi-stability/#n-api). The implementation is based on `node-oniguruma`, but rewritten in C, some interface differences, and with added promise support.
 
 To interface with the regular expressions, there is a choice of
 - Synchronous calls with `scanner.findNextMatchSync` (fastest, but blocks the main thread)
@@ -60,6 +60,8 @@ The API supports starting from a given index within the string. This has been in
 
 ## TODO
 - [X] Refactor C code to reduce duplication
+- [ ] Fix the G anchor detection
+- [ ] Comprehensive tests
 - [ ] Set up proper benchmarks
 - [ ] Typescript types
 - [ ] ~~Batch the property setting into a single N-API call~~
