@@ -1,3 +1,6 @@
+/**
+ * Represents the location and range of a single capture group
+ */
 export interface Capture {
   /**
    * The index the capture group starts at
@@ -15,6 +18,10 @@ export interface Capture {
   length: number;
 }
 
+/**
+ * Represents the location and range of a single capture group,
+ * as well as the corresponding slice of text
+ */
 export interface Match extends Capture {
   /**
    * The text inside the capture group
@@ -22,6 +29,9 @@ export interface Match extends Capture {
   match: string;
 }
 
+/**
+ * An interface to OnigScanner that looks more similar to a normal regular expression
+ */
 export declare class OnigRegExp {
   constructor(source: string);
 
@@ -50,6 +60,11 @@ export interface ScanResult {
   captureIndices: Capture[];
 }
 
+/**
+ * The interface to the underlying Oniguruma regex engine. Given an
+ * array of patterns, it can be run against text to find the
+ * pattern that has the soonest match for the given input.
+ */
 export declare class OnigScanner {
   constructor(patterns: string[]);
 
@@ -61,6 +76,10 @@ export declare class OnigScanner {
   findNextMatch(string: string | OnigString): Promise<ScanResult | null>;
 }
 
+/**
+ * Cache for the OnigScanner to use. Use this class if the string will be scanned
+ * multiple times.
+ */
 export declare class OnigString {
   constructor(source: string);
   substring(start: number, end: number): string;
