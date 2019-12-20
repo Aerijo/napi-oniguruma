@@ -22,7 +22,7 @@ export interface Match extends Capture {
   match: string;
 }
 
-export class OnigRegExp {
+export declare class OnigRegExp {
   constructor(source: string);
 
   searchSync(string: string, startIndex?: number): Match[] | null;
@@ -50,7 +50,7 @@ export interface ScanResult {
   captureIndices: Capture[];
 }
 
-export class OnigScanner {
+export declare class OnigScanner {
   constructor(patterns: string[]);
 
   findNextMatchSync(string: string | OnigString, startIndex?: number): ScanResult | null;
@@ -61,7 +61,7 @@ export class OnigScanner {
   findNextMatch(string: string | OnigString): Promise<ScanResult | null>;
 }
 
-export class OnigString {
+export declare class OnigString {
   constructor(source: string);
   substring(start: number, end: number): string;
   slice(start: number, end: number): string;
