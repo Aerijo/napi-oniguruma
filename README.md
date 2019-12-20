@@ -61,8 +61,8 @@ The API supports starting from a given index within the string. This has been in
 ## TODO
 - [X] Refactor C code to reduce duplication
 - [X] Fix the G anchor detection
-- [ ] Comprehensive tests
+- [X] Comprehensive tests
 - [ ] Set up proper benchmarks
-- [ ] Typescript types
+- [X] Typescript types
 - [ ] ~~Batch the property setting into a single N-API call~~
   - Not done, as could not detect any measurable improvement, and makes the properties invisible to the tests.
