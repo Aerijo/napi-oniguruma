@@ -73,6 +73,9 @@ napi_value js_onig_scanner_find_next_match(napi_env env, napi_callback_info info
   if (argc >= 2) {
     int32_t js_start_index;
     NAPI_CALL(env, napi_get_value_int32(env, argv[1], &js_start_index));
+    if (js_start_index < 0) {
+      js_start_index = 0;
+    }
     start_byte = js_start_index * 2;
   }
 
@@ -107,6 +110,9 @@ napi_value js_onig_scanner_find_next_match_sync(napi_env env, napi_callback_info
   if (argc >= 2) {
     int32_t js_start_index;
     NAPI_CALL(env, napi_get_value_int32(env, argv[1], &js_start_index));
+    if (js_start_index < 0) {
+      js_start_index = 0;
+    }
     start_byte = js_start_index * 2;
   }
 
