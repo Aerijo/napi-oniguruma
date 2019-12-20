@@ -206,4 +206,34 @@ describe("OnigScanner", function() {
       assert.deepStrictEqual(scanner.findNextMatchSync(str, 1), null);
     });
   });
+
+  describe("when capture groups are present", function() {
+    it("returns all of them in the array", function() {
+      const scanner = new OnigScanner(["foo(.)a(r)"]);
+      const promises = [];
+      const c = {scanner, promises};
+
+      inspect(c, "foobarbaz", 0, null, {
+        index: 0,
+        captureIndices: [
+          {start: 0, end: 6, length: 6},
+          {start: 3, end: 4, length: 1},
+          {start: 5, end: 6, length: 1},
+        ],
+      });
+
+      const scanner2 = new OnigScanner(["((fo)|(ba))r"]);
+      inspect({scanner: scanner2, promises}, "bar", 0, null, {
+        index: 0,
+        captureIndices: [
+          {start: 0, end: 3, length: 3}, // overall match
+          {start: 0, end: 2, length: 2}, // ((fo)|(ba))
+          {start: 0, end: 0, length: 0}, // (fo)
+          {start: 0, end: 2, length: 2}, // (ba)
+        ],
+      });
+
+      return Promise.all(promises);
+    });
+  })
 });
