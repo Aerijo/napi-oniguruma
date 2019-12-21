@@ -2,6 +2,9 @@
     "targets": [
         {
             "target_name": "oniguruma_scanner",
+            "defines": [
+                "NAPI_VERSION=3",
+            ],
             "dependencies": [
                 "oniguruma",
             ],

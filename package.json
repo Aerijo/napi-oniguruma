@@ -12,12 +12,19 @@
     "napi",
     "native"
   ],
+  "binary": {
+    "napi_versions": [
+      3
+    ]
+  },
   "scripts": {
-    "install": "npm run configure && npm run build",
+    "install": "prebuild-install || npm run configure && npm run build",
     "configure": "node script/configure.js",
     "build": "node-gyp rebuild -j=max",
     "test": "mocha",
-    "b:test": "npm run build && npm run test"
+    "b:test": "npm run build && npm run test",
+    "pre-build": "prebuild -t 3 -r napi --verbose",
+    "pre-build:upload": "prebuild --upload-all"
   },
   "dependencies": {
     "prebuild-install": "5.3.3"
