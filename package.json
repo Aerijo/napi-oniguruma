@@ -18,7 +18,7 @@
     ]
   },
   "scripts": {
-    "install": "prebuild-install || npm run configure && npm run build",
+    "install": "prebuild-install --runtime napi --verbose || npm run configure && npm run build",
     "configure": "node script/configure.js",
     "build": "node-gyp rebuild -j=max",
     "test": "mocha",
