@@ -18,11 +18,11 @@
     ]
   },
   "scripts": {
-    "install": "prebuild-install --runtime napi --verbose || npm run configure && npm run build",
+    "install": "prebuild-install --runtime napi --verbose || npm run configure && npm run rebuild",
     "configure": "node script/configure.js",
-    "build": "node-gyp rebuild -j=max",
+    "rebuild": "node-gyp rebuild -j=max",
     "test": "mocha",
-    "b:test": "npm run build && npm run test",
+    "b:test": "npm run rebuild && npm run test",
     "pre-build": "prebuild -t 3 -r napi --verbose",
     "pre-build:upload": "prebuild --upload-all"
   },
