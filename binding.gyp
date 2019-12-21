@@ -41,12 +41,6 @@
                     "include_dirs": [
                         "third_party/oniguruma",
                     ],
-                    "sources": [
-                        "third_party/oniguruma/src/unicode_fold1_key.c",
-                        "third_party/oniguruma/src/unicode_fold2_key.c",
-                        "third_party/oniguruma/src/unicode_fold3_key.c",
-                        "third_party/oniguruma/src/unicode_unfold_key.c",
-                    ]
                 }],
                 ["OS==\"linux\"", {
                     "cflags": [
@@ -105,6 +99,10 @@
                 "third_party/oniguruma/src/utf32_be.c",
                 "third_party/oniguruma/src/utf32_le.c",
                 "third_party/oniguruma/src/unicode.c",
+                "third_party/oniguruma/src/unicode_fold1_key.c",
+                "third_party/oniguruma/src/unicode_fold2_key.c",
+                "third_party/oniguruma/src/unicode_fold3_key.c",
+                "third_party/oniguruma/src/unicode_unfold_key.c",
             ],
         }
     ]
