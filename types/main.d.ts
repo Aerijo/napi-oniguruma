@@ -3,12 +3,18 @@
  */
 export interface Capture {
   /**
-   * The index the capture group starts at
+   * @deprecated
+   * The index of the capture group starts
+   */
+  index: number;
+
+  /**
+   * The index of the string the capture group starts at
    */
   start: number;
 
   /**
-   * The index the capture group ends just before
+   * The index of the string the capture group ends just before
    */
   end: number;
 

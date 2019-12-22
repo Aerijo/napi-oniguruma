@@ -36,17 +36,17 @@ describe("OnigScanner", function() {
 
       inspect(c, "xxaxxbxxc", 0, null, {
         index: 0,
-        captureIndices: [{start: 2, end: 3, length: 1}],
+        captureIndices: [{index: 0, start: 2, end: 3, length: 1}],
       });
 
       inspect(c, "xxaxxbxxc", 4, null, {
         index: 1,
-        captureIndices: [{start: 5, end: 6, length: 1}],
+        captureIndices: [{index: 0, start: 5, end: 6, length: 1}],
       });
 
       inspect(c, "xxaxxbxxc", 7, null, {
         index: 2,
-        captureIndices: [{start: 8, end: 9, length: 1}],
+        captureIndices: [{index: 0, start: 8, end: 9, length: 1}],
       });
 
       inspect(c, "xxaxxbxxc", 9, null, null);
@@ -59,12 +59,12 @@ describe("OnigScanner", function() {
 
       assert.deepStrictEqual(scanner.findNextMatchSync("aaa"), {
         index: 0,
-        captureIndices: [{start: 0, end: 1, length: 1}],
+        captureIndices: [{index: 0, start: 0, end: 1, length: 1}],
       });
 
       assert.deepStrictEqual(await scanner.findNextMatch("aaa"), {
         index: 0,
-        captureIndices: [{start: 0, end: 1, length: 1}],
+        captureIndices: [{index: 0, start: 0, end: 1, length: 1}],
       });
 
       await new Promise(resolve => {
@@ -72,7 +72,7 @@ describe("OnigScanner", function() {
           assert.strictEqual(err, null);
           assert.deepStrictEqual(captures, {
             index: 0,
-            captureIndices: [{start: 0, end: 1, length: 1}],
+            captureIndices: [{index: 0, start: 0, end: 1, length: 1}],
           });
           resolve();
         });
@@ -86,7 +86,7 @@ describe("OnigScanner", function() {
 
       inspect(c, "fooXbar", -100, null, {
         index: 0,
-        captureIndices: [{start: 3, end: 4, length: 1}],
+        captureIndices: [{index: 0, start: 3, end: 4, length: 1}],
       });
 
       inspect(c, "fooXbar", 100, null, null);
@@ -100,7 +100,7 @@ describe("OnigScanner", function() {
       const scanner = new OnigScanner(["Возврат"]);
       return Promise.all(inspect({scanner, promises: []}, "Возврат long_var_name;", 0, null, {
         index: 0,
-        captureIndices: [{start: 0, end: 7, length: 7}]
+        captureIndices: [{index: 0, start: 0, end: 7, length: 7}]
       }));
     });
   });
@@ -115,7 +115,7 @@ describe("OnigScanner", function() {
 
       inspect(c, "ab…cde21", 5, null, {
         index: 1,
-        captureIndices: [{start: 6, end: 7, length: 1}],
+        captureIndices: [{index: 0, start: 6, end: 7, length: 1}],
       });
 
       return Promise.all(c.promises);
@@ -132,7 +132,7 @@ describe("OnigScanner", function() {
 
       inspect(c, "ab🇦🇺cde21", 5, null, {
         index: 1,
-        captureIndices: [{start: 9, end: 10, length: 1}],
+        captureIndices: [{index: 0, start: 9, end: 10, length: 1}],
       });
 
       return Promise.all(c.promises);
@@ -147,42 +147,42 @@ describe("OnigScanner", function() {
 
       inspect(c, `X${String.fromCharCode(0xd83c)}X`, 0, null, {
         index: 0,
-        captureIndices: [{start: 0, end: 1, length: 1}],
+        captureIndices: [{index: 0, start: 0, end: 1, length: 1}],
       });
 
       inspect(c, `X${String.fromCharCode(0xd83c)}X`, 1, null, {
         index: 0,
-        captureIndices: [{start: 2, end: 3, length: 1}],
+        captureIndices: [{index: 0, start: 2, end: 3, length: 1}],
       });
 
       inspect(c, `X${String.fromCharCode(0xd83c)}X`, 2, null, {
         index: 0,
-        captureIndices: [{start: 2, end: 3, length: 1}],
+        captureIndices: [{index: 0, start: 2, end: 3, length: 1}],
       });
 
       inspect(c, `X${String.fromCharCode(0xdfff)}X`, 0, null, {
         index: 0,
-        captureIndices: [{start: 0, end: 1, length: 1}],
+        captureIndices: [{index: 0, start: 0, end: 1, length: 1}],
       });
 
       inspect(c, `X${String.fromCharCode(0xdfff)}X`, 1, null, {
         index: 0,
-        captureIndices: [{start: 2, end: 3, length: 1}],
+        captureIndices: [{index: 0, start: 2, end: 3, length: 1}],
       });
 
       inspect(c, `X${String.fromCharCode(0xdfff)}X`, 2, null, {
         index: 0,
-        captureIndices: [{start: 2, end: 3, length: 1}],
+        captureIndices: [{index: 0, start: 2, end: 3, length: 1}],
       });
 
       inspect(c, `X${String.fromCharCode(0xd800)}${String.fromCharCode(0xdc00)}X`, 2, null, {
         index: 0,
-        captureIndices: [{start: 3, end: 4, length: 1}],
+        captureIndices: [{index: 0, start: 3, end: 4, length: 1}],
       });
 
       inspect(c, `X${String.fromCharCode(0xdbff)}${String.fromCharCode(0xdfff)}X`, 2, null, {
         index: 0,
-        captureIndices: [{start: 3, end: 4, length: 1}],
+        captureIndices: [{index: 0, start: 3, end: 4, length: 1}],
       });
 
       return Promise.all(promises);
@@ -197,7 +197,7 @@ describe("OnigScanner", function() {
       // \G is start of string
       assert.deepStrictEqual(scanner.findNextMatchSync(str, 0), {
         index: 0,
-        captureIndices: [{start: 6, end: 9, length: 3}],
+        captureIndices: [{index: 0, start: 6, end: 9, length: 3}],
       });
 
       // \G is second character in string, with caching would have
@@ -216,9 +216,9 @@ describe("OnigScanner", function() {
       inspect(c, "foobarbaz", 0, null, {
         index: 0,
         captureIndices: [
-          {start: 0, end: 6, length: 6},
-          {start: 3, end: 4, length: 1},
-          {start: 5, end: 6, length: 1},
+          {index: 0, start: 0, end: 6, length: 6},
+          {index: 1, start: 3, end: 4, length: 1},
+          {index: 2, start: 5, end: 6, length: 1},
         ],
       });
 
@@ -226,10 +226,10 @@ describe("OnigScanner", function() {
       inspect({scanner: scanner2, promises}, "bar", 0, null, {
         index: 0,
         captureIndices: [
-          {start: 0, end: 3, length: 3}, // overall match
-          {start: 0, end: 2, length: 2}, // ((fo)|(ba))
-          {start: 0, end: 0, length: 0}, // (fo)
-          {start: 0, end: 2, length: 2}, // (ba)
+          {index: 0, start: 0, end: 3, length: 3}, // overall match
+          {index: 1, start: 0, end: 2, length: 2}, // ((fo)|(ba))
+          {index: 2, start: 0, end: 0, length: 0}, // (fo)
+          {index: 3, start: 0, end: 2, length: 2}, // (ba)
         ],
       });
 

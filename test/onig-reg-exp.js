@@ -31,7 +31,7 @@ describe("OnigRegExp", function() {
     const regex = new OnigRegExp("bar");
     const promises = [];
     const c = {regex, promises};
-    inspect(c, "foobarbaz", 0, null, [{start: 3, end: 6, length: 3, match: "bar"}]);
+    inspect(c, "foobarbaz", 0, null, [{index: 0, start: 3, end: 6, length: 3, match: "bar"}]);
     inspect(c, "helloworld", 0, null, null);
 
     return promises;

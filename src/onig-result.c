@@ -65,6 +65,8 @@ napi_value generate_captures(napi_env env, OnigResult* best) {
     NAPI_CALL(env, napi_create_object(env, &capture));
 
     napi_value t;
+    NAPI_CALL(env, napi_create_uint32(env, i, &t));
+    NAPI_CALL(env, napi_set_named_property(env, capture, "index", t));
     NAPI_CALL(env, napi_create_uint32(env, capture_start, &t));
     NAPI_CALL(env, napi_set_named_property(env, capture, "start", t));
     NAPI_CALL(env, napi_create_uint32(env, capture_end, &t));
